@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS AI - Discord AI Bot Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <span class="logo">⚡</span>
+                <span>NEXUS AI</span>
+            </div>
+            <div class="navbar-links">
+                <a href="index.html" class="nav-link active">Startseite</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#support" class="nav-link">Support</a>
+                <button id="loginBtn" class="btn btn-discord">🎮 Login with Discord</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>NEXUS AI</h1>
+            <p class="subtitle">Der moderne Discord AI‑Begleiter, der deinen Server smarter, schneller und lebendiger macht.</p>
+            <p class="highlight">Jetzt mit einem komplett neuen Web‑Dashboard — live synchronisiert und sofort einsatzbereit.</p>
+            <div class="hero-buttons">
+                <a href="#" onclick="window.location.href = window.WORKER_URL + '/invite'; return false;" class="btn btn-primary btn-lg">👉 INVITE NEXUS AI!</a>
+                <button id="dashboardBtn" class="btn btn-secondary btn-lg" style="display:none;">📊 Zum Dashboard</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>Intelligente KI</h3>
+                <p>Kontextbasierte Antworten mit Groq API</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Blitzschnell</h3>
+                <p>Live synchronisiert und sofort einsatzbereit</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Personalisierbar</h3>
+                <p>Passe Persönlichkeit, Sprache und alles an</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Sicher</h3>
+                <p>Verschlüsselt & Admin-Kontrolle</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support -->
+    <section id="support" class="support">
+        <h2>Brauchst du Hilfe?</h2>
+        <p>Unser Support-Team ist immer bereit zu helfen</p>
+        <button class="btn btn-primary">📧 Support Kontaktieren</button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>NexusAI – Made by Alamer</p>
+        <p class="tagline">Schnell. Modern. Live synchronisiert.</p>
+    </footer>
+
+    <script>
+        window.WORKER_URL = 'https://nexus-ai.your-domain.workers.dev';
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const oauth_url = `https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&redirect_uri=${encodeURIComponent(window.WORKER_URL + '/auth/callback')}&response_type=code&scope=identify%20guilds`;
+            window.location.href = oauth_url;
+        });
+    </script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
