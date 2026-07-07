@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>NexusAI</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="logo">NexusAI</div>
+    <button class="login-btn" onclick="startLogin()">Login</button>
+  </nav>
+
+  <section class="hero">
+    <h1 class="title">TRIFF <span class="blue">NEXUS AI</span></h1>
+    <p class="subtitle">Moderner Discord AI Chatbot – schnell, smart, blau.</p>
+
+    <div class="buttons">
+      <button class="btn" onclick="startLogin()">Login mit Discord</button>
+      <a class="btn-outline" href="dashboard.html">Dashboard öffnen</a>
+      <button class="btn-outline" onclick="inviteBot()">Bot einladen</button>
+    </div>
+
+    <select class="lang-select" onchange="loadLang(this.value)">
+      <option value="de">Deutsch</option>
+      <option value="en">English</option>
+      <option value="ru">Русский</option>
+    </select>
+  </section>
+
+  <script src="assets/main.js"></script>
+</body>
+</html>
