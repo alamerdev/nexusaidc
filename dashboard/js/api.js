@@ -1,4 +1,4 @@
-const WORKER_URL = 'https://nexus-ai.your-domain.workers.dev';
+const WORKER_URL = 'https://nexus.alamer.workers.dev';
 
 class NexusAPI {
   constructor() {
