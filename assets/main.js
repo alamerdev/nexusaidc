@@ -1,10 +1,10 @@
 function startLogin() {
-  window.location.href = "https://DEIN-WORKER.workers.dev/api/auth/discord/login";
+  window.location.href = "https://rapid-dawn-5ec2.alamer.workers.dev/api/auth/discord/login";
 }
 
 function inviteBot() {
   window.location.href =
-    "https://discord.com/oauth2/authorize?client_id=DEINE_CLIENT_ID&scope=bot&permissions=8";
+    "https://discord.com/oauth2/authorize?client_id=1521537524462391447&scope=bot&permissions=8";
 }
 
 async function loadLang(code) {
@@ -15,3 +15,4 @@ async function loadLang(code) {
   document.querySelector(".subtitle").innerHTML = lang.subtitle;
   document.querySelector(".login-btn").innerHTML = lang.login;
 }
+
