@@ -16,9 +16,9 @@ Ein moderner Discord Bot mit künstlicher Intelligenz, Web-Dashboard und Echtzei
 nexus-ai-project/
 ├── bot/                 # Discord Bot
 │   ├── src/
-│   │   ├── commands/    # Slash Commands
+│   │   ├── commands/    # Deine Slash Commands
 │   │   ├── events/      # Event Handler
-│   │   └── utils/       # Hilfsfunktionen
+│   │   └── utils/       # Hilfsfunktionen (Groq, Database)
 │   └── package.json
 │
 ├── worker/              # Cloudflare Worker
@@ -46,6 +46,12 @@ cp .env.example .env
 npm start
 ```
 
+**Benötigte Secrets in .env:**
+- `DISCORD_TOKEN` - Dein Bot Token von Discord
+- `GROQ_API_KEY` - Dein Groq API Key
+- `WORKER_URL` - URL deines Cloudflare Workers
+- `WORKER_AUTH_TOKEN` - Secret Token für Worker Auth
+
 ### 2. Worker Setup
 
 ```bash
@@ -55,16 +61,22 @@ npm install
 npm run deploy
 ```
 
+**Benötigte Secrets in wrangler.toml:**
+- `DISCORD_CLIENT_ID` - Client ID aus Discord Developer Portal
+- `DISCORD_CLIENT_SECRET` - Client Secret aus Discord Developer Portal
+- Erstelle ein **KV Namespace** namens `NEXUS_KV`
+
 ### 3. Dashboard Setup
 
 - Pushe den `dashboard/` Ordner zu GitHub Pages
-- Aktualisiere die WORKER_URL in den JavaScript-Dateien
+- Gehe zu: Settings → Pages → Branch: main, Folder: /dashboard
+- Aktualisiere `WORKER_URL` in `dashboard/js/api.js`
 
-## 🔐 Umgebungsvariablen
+## 🔑 Umgebungsvariablen
 
 ### Bot (.env)
 ```
-DISCORD_TOKEN=your_token
+DISCORD_TOKEN=your_bot_token
 GROQ_API_KEY=your_groq_key
 WORKER_URL=https://your-worker.workers.dev
 WORKER_AUTH_TOKEN=secret_token
@@ -78,22 +90,41 @@ DISCORD_CLIENT_SECRET=your_secret
 
 ## 📚 API Dokumentation
 
-### /api/servers
+### `/api/servers`
 Holt die Admin-Server des Nutzers
+- **Methode**: GET
+- **Auth**: Discord OAuth Token
+- **Response**: `{ servers: [...] }`
 
-### /api/settings/{serverId}
+### `/api/settings/{serverId}`
 GET/POST für Server-Einstellungen
+- **GET**: Hole Server-Konfiguration
+- **POST**: Speichere Server-Konfiguration
 
-### /auth/callback
+### `/auth/callback`
 OAuth2 Callback für Discord Login
 
-## 🛠️ Commands
+### `/invite`
+Redirect zum Discord Bot Invite Link
+
+## 🎮 Deine Commands
 
 - `/ask` - Stelle NexusAI eine Frage
 - `/script` - Generiere Code
 - `/set_language` - Ändere die Sprache
 - `/set_personality` - Ändere die Persönlichkeit
-- `/help` - Zeige die Hilfe
+- Und weitere...
+
+## 🛠️ Integrationen
+
+### Groq API (`bot/src/utils/groq.js`)
+Für KI-Antworten
+
+### Database (`bot/src/utils/database.js`)
+Für Server-Konfiguration (speichert über Worker)
+
+### Discord OAuth2 (`worker/src/oauth.js`)
+Für Dashboard-Login
 
 ## 📝 Lizenz
 
