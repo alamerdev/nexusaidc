@@ -1,57 +1,86 @@
-const WORKER_URL = 'https://nexus.alamer.workers.dev';
-
-class NexusAPI {
-  constructor() {
-    this.token = localStorage.getItem('discord_token');
-    this.baseUrl = WORKER_URL;
-  }
-
-  async getServers() {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/servers`, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching servers:', error);
-      return { servers: [] };
+// API Manager
+class APIManager {
+    constructor() {
+        this.token = localStorage.getItem('nexus_access_token');
+        this.baseUrl = CONFIG.WORKER_URL;
+        
+        if (!this.token) {
+            this.redirectToLogin();
+        }
     }
-  }
 
-  async getSettings(serverId) {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/settings/${serverId}`, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-      return {};
+    redirectToLogin() {
+        log('No token found, redirecting to login');
+        window.location.href = 'login.html';
     }
-  }
 
-  async saveSettings(serverId, settings) {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/settings/${serverId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(settings),
-      });
-      return await response.json();
-    } catch (error) {
-      console.error('Error saving settings:', error);
-      return { error: error.message };
+    async request(endpoint, options = {}) {
+        const url = `${this.baseUrl}${endpoint}`;
+        
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.token}`,
+            ...options.headers
+        };
+
+        const config = {
+            method: options.method || 'GET',
+            headers,
+            ...options
+        };
+
+        if (options.body) {
+            config.body = JSON.stringify(options.body);
+        }
+
+        try {
+            log(`API Request: ${config.method} ${url}`);
+            const response = await fetch(url, config);
+            
+            if (response.status === 401) {
+                err('Unauthorized - Token expired');
+                this.redirectToLogin();
+                return null;
+            }
+
+            const data = await response.json();
+            
+            if (!response.ok) {
+                err(`API Error: ${response.status}`, data);
+                return null;
+            }
+
+            log(`API Response: ${endpoint}`, data);
+            return data;
+        } catch (error) {
+            err(`API Request Failed: ${endpoint}`, error);
+            return null;
+        }
     }
-  }
+
+    // Auth
+    async getUser() {
+        return this.request('/api/auth/discord/user');
+    }
+
+    // Servers
+    async getServers() {
+        return this.request('/api/server/list');
+    }
+
+    async getServerSettings(serverId) {
+        return this.request(`/api/server/settings?id=${serverId}`);
+    }
+
+    async updateServerSettings(serverId, settings) {
+        return this.request(`/api/server/settings/update`, {
+            method: 'POST',
+            body: {
+                server_id: serverId,
+                ...settings
+            }
+        });
+    }
 }
 
-const api = new NexusAPI();
+const api = new APIManager();

@@ -3,41 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexusAI Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Dashboard - NexusAI</title>
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-brand">
-                <span class="logo">⚡</span>
-                <span>NEXUS AI Dashboard</span>
-            </div>
-            <div class="navbar-links">
-                <button id="logoutBtn" class="btn btn-discord">🚪 Logout</button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="dashboard-container">
+    <div class="dashboard">
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="servers-list">
-                <h3>Deine Server</h3>
-                <div id="serversList" class="servers"></div>
+            <div class="sidebar-header">
+                <div class="logo-mini">⚡</div>
+                <h2>NEXUS</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="servers">
+                    <span class="icon">🏠</span>
+                    <span>Übersicht</span>
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <span class="icon">⚙️</span>
+                    <span>Einstellungen</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info" id="userInfo">
+                    <img id="userAvatar" src="" alt="Avatar" class="user-avatar">
+                    <div class="user-details">
+                        <p id="userName">Benutzer</p>
+                        <small id="userTag">@user</small>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="btn btn-logout">🚪 Logout</button>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div id="dashboardContent">
-                <div class="loading">Lädt...</div>
+            <!-- Header -->
+            <header class="dashboard-header">
+                <h1 id="pageTitle">Übersicht</h1>
+                <div class="header-actions">
+                    <button class="btn btn-small">🔄 Aktualisieren</button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Servers Section -->
+                <section id="serversSection" class="section active">
+                    <div class="section-header">
+                        <h2>Deine Server</h2>
+                        <p>Verwalte deine Discord-Server mit NEXUS AI</p>
+                    </div>
+                    
+                    <div id="serversList" class="servers-grid">
+                        <div class="loading-skeleton"></div>
+                        <div class="loading-skeleton"></div>
+                        <div class="loading-skeleton"></div>
+                    </div>
+                </section>
+
+                <!-- Server Details Section -->
+                <section id="serverDetailsSection" class="section" style="display: none;">
+                    <button class="btn btn-back" id="backBtn">← Zurück</button>
+                    
+                    <div class="server-header" id="serverHeader"></div>
+                    
+                    <div class="settings-tabs">
+                        <button class="tab-btn active" data-tab="personality">🤖 Personality</button>
+                        <button class="tab-btn" data-tab="groq">🔑 Groq API</button>
+                        <button class="tab-btn" data-tab="chat">💬 Chat</button>
+                        <button class="tab-btn" data-tab="language">🌍 Sprache</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <!-- Personality Tab -->
+                        <div id="personalityTab" class="tab active">
+                            <div class="card">
+                                <h3>🤖 KI-Persönlichkeit</h3>
+                                <p class="card-description">Definiere, wie sich dein AI-Bot verhält und antwortet.</p>
+                                <textarea id="personalityInput" placeholder="Beispiel: Du bist ein freundlicher, humorvoller Bot, der hilft..." rows="6" class="textarea-input"></textarea>
+                                <button class="btn btn-primary" id="savePersonalityBtn">💾 Speichern</button>
+                            </div>
+                        </div>
+
+                        <!-- Groq API Tab -->
+                        <div id="groqTab" class="tab">
+                            <div class="card">
+                                <h3>🔑 Groq API Key</h3>
+                                <p class="card-description">Gib deinen Groq API Key ein, um AI-Features zu nutzen.</p>
+                                <div class="form-group">
+                                    <label>API Key</label>
+                                    <input type="password" id="groqKeyInput" placeholder="gsk_..." class="text-input">
+                                    <small>Dein Key wird verschlüsselt gespeichert</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Model</label>
+                                    <select id="modelSelect" class="select-input">
+                                        <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                                        <option value="llama2-70b-4096">Llama 2 70B</option>
+                                        <option value="gemma-7b-it">Gemma 7B</option>
+                                    </select>
+                                </div>
+                                
+                                <button class="btn btn-primary" id="saveGroqBtn">💾 Speichern</button>
+                            </div>
+                        </div>
+
+                        <!-- Chat Tab -->
+                        <div id="chatTab" class="tab">
+                            <div class="card">
+                                <h3>💬 Chat-Einstellungen</h3>
+                                <p class="card-description">Konfiguriere, wo und wie der Bot antwortet.</p>
+                                
+                                <div class="form-group">
+                                    <label>Chat-Channel</label>
+                                    <input type="text" id="chatChannelInput" placeholder="Channel ID oder @channel" class="text-input">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Chat-History zurücksetzen nach (Minuten)</label>
+                                    <input type="number" id="chatHistoryInput" min="5" max="1440" value="60" class="text-input">
+                                </div>
+                                
+                                <div class="form-group checkbox">
+                                    <input type="checkbox" id="autoReplyCheckbox">
+                                    <label>Auto-Reply aktivieren</label>
+                                </div>
+                                
+                                <button class="btn btn-primary" id="saveChatBtn">💾 Speichern</button>
+                            </div>
+                        </div>
+
+                        <!-- Language Tab -->
+                        <div id="languageTab" class="tab">
+                            <div class="card">
+                                <h3>🌍 Sprache</h3>
+                                <p class="card-description">Wähle die Sprache für den Bot.</p>
+                                
+                                <div class="language-grid">
+                                    <button class="language-btn" data-lang="de" data-name="Deutsch">🇩🇪 Deutsch</button>
+                                    <button class="language-btn" data-lang="en" data-name="English">🇬🇧 English</button>
+                                    <button class="language-btn" data-lang="fr" data-name="Français">🇫🇷 Français</button>
+                                    <button class="language-btn" data-lang="es" data-name="Español">🇪🇸 Español</button>
+                                </div>
+                                
+                                <button class="btn btn-primary" id="saveLanguageBtn">💾 Speichern</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settingsSection" class="section">
+                    <div class="section-header">
+                        <h2>Allgemeine Einstellungen</h2>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Account</h3>
+                        <p>Dein Discord-Konto ist verbunden.</p>
+                        <button class="btn btn-logout" id="logoutBtn2">🚪 Abmelden</button>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
 
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
